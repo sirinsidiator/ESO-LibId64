@@ -34,7 +34,7 @@ local function fromLuaNumber(value)
     obj.id64 = StringToId64(safeIntegerToString(value))
     obj.string = Id64ToString(obj.id64)
     if value >= 0 then
-        obj.__number = tonumber(obj.string)
+        obj.number = tonumber(obj.string)
     end
     return obj, false
 end
@@ -49,7 +49,7 @@ local function fromId64(value)
     obj.string = str
     obj.id64 = value
     if CompareId64s(value, MAX_SAFE_INT_ID64) <= 0 then
-        obj.__number = tonumber(obj.string)
+        obj.number = tonumber(obj.string)
     end
     return obj, false
 end
@@ -62,7 +62,7 @@ local function fromString(value)
     obj.id64 = StringToId64(value)
     obj.string = Id64ToString(obj.id64)
     if CompareId64s(obj.id64, MAX_SAFE_INT_ID64) <= 0 then
-        obj.__number = tonumber(obj.string)
+        obj.number = tonumber(obj.string)
     end
     return obj, false
 end
@@ -119,8 +119,8 @@ local function createId64(value, isLuaNumber)
     if not isCached then
         obj = makeImmutable(obj, meta)
         cache[obj.string] = obj
-        if obj.__number then
-            cache[obj.__number] = obj
+        if obj.number then
+            cache[obj.number] = obj
         end
     end
     return obj
@@ -241,9 +241,9 @@ end
 
 local function addId64WithNumber(a, b)
     assert(b > 0, "Adding a negative number to id64 is not supported")
-    local result = (a.__number or 0) + b
+    local result = (a.number or 0) + b
     local numeric = true
-    if not a.__number or result > MAX_SAFE_INT then
+    if not a.number or result > MAX_SAFE_INT then
         result = stringAddition(a.string, safeIntegerToString(b))
         numeric = false
     end
@@ -251,9 +251,9 @@ local function addId64WithNumber(a, b)
 end
 
 local function addId64WithId64(a, b)
-    local result = (a.__number or 0) + (b.__number or 0)
+    local result = (a.number or 0) + (b.number or 0)
     local numeric = true
-    if not a.__number or not b.__number or result > MAX_SAFE_INT then
+    if not a.number or not b.number or result > MAX_SAFE_INT then
         result = stringAddition(a.string, b.string)
         numeric = false
     end
@@ -274,9 +274,9 @@ local function subtractNumberFromId64(a, b)
         return addId64WithNumber(a, -b)
     end
 
-    local result = (a.__number or 0) - b
+    local result = (a.number or 0) - b
     local numeric = true
-    if not a.__number or result > MAX_SAFE_INT then
+    if not a.number or result > MAX_SAFE_INT then
         result = stringSubtraction(a.string, safeIntegerToString(b))
         numeric = false
     end
@@ -288,9 +288,9 @@ local function subtractId64FromNumber(a, b)
         return addId64WithNumber(b, -a)
     end
 
-    local result = a - (b.__number or 0)
+    local result = a - (b.number or 0)
     local numeric = true
-    if not a.__number or result > MAX_SAFE_INT then
+    if not a.number or result > MAX_SAFE_INT then
         result = stringSubtraction(safeIntegerToString(a), b.string)
         numeric = false
     end
@@ -298,9 +298,9 @@ local function subtractId64FromNumber(a, b)
 end
 
 local function subtractId64FromId64(a, b)
-    local result = (a.__number or 0) - (b.__number or 0)
+    local result = (a.number or 0) - (b.number or 0)
     local numeric = true
-    if not a.__number or not b.__number or result > MAX_SAFE_INT then
+    if not a.number or not b.number or result > MAX_SAFE_INT then
         result = stringSubtraction(a.string, b.string)
         numeric = false
     end

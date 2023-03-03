@@ -17,11 +17,12 @@ local value3 = id64.fromNumber(1)
 local value4 = id64(value1)
 ```
 
-The wrapper has two properties `id64` and `string` which return the underlying id64 and string representation for use with APIs and the saved variables.
+The wrapper has three properties `id64`, `string` and `number`, which return the underlying id64 and string representation for use with APIs and the saved variables and optionally the numeric presentation if the id64 is in the range that can be represented by Lua numbers.
 
 ```lua
 GetMailItemInfo(value1.id64)
 mySaveData.someValue = value2.string -- or tostring(value2)
+mySaveData.anotherValue = value3.number
 ```
 
 But that's not all - you can use the wrapper to do math operations with other id64s!
@@ -57,26 +58,34 @@ id64obj|nil = id64(string|id64|id64obj|nil)
 
 Creates an id64 wrapper from a string containing a number or an id64. `nil` and already wrapped id64s are returned as is. Other value types are not supported and will throw an error.
 
-**id64.fromNumber**
+**id64.fromNumber()**
 ```
-id64obj = id64.fromNumber(number)
+id64obj = id64.fromNumber(luaint53)
 ```
 
 Creates an id64 wrapper from integers between `-9007199254740992` (-2<sup>53</sup>) and `9007199254740992` (2<sup>53</sup>). Other integer values cannot be [safely represented](https://en.wikipedia.org/wiki/Double-precision_floating-point_format#Precision_limitations_on_integer_values) as a Lua number and will throw an error.
 
-**id64.isSafeNumber**
+**id64.isSafeNumber()**
 ```
 bool = id64.isSafeNumber(number)
 ```
 
 Returns true if the passed number is between `-9007199254740992` (-2<sup>53</sup>) and `9007199254740992` (2<sup>53</sup>). 
 
-**id64.isInstance**
+**id64.isInstance()**
 ```
 bool = id64.isInstance(any)
 ```
 
 Returns `true` if the passed value is an id64 wrapper object.
+
+**Properties**
+
+| name       | type           | comment                                                                                         |
+|------------|----------------|-------------------------------------------------------------------------------------------------|
+| string     | `string`       | The string representing the id64 value. Mainly used for storing them in saved variables.        |
+| id64       | `id64`         | The actual id64 value for use with API functions.                                               |
+| number     | `luaint53|nil` | Either a Lua number or nil, if the id64 is outside of the range that can be safely represented. |
 
 **Operators**
 
