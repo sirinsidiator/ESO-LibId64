@@ -6,6 +6,7 @@ SPDX-License-Identifier: Artistic-2.0
 
 LibId64 is a wrapper around the id64 (=uint64) datatype in Elder Scrolls Online.
 It aims to make working with id64s as convenient as possible, while hiding away all the computer science, undocumented Lua features and dark (meta table) magic.
+You can find the [latest release on ESOUI](https://www.esoui.com/downloads/info3585-LibId64.html).
 
 Simply pass an id64 or a string containing a number to the function `id64()` and it will hand you the wrapper object. Passing `nil` or an already wrapped id64 will return them unchanged. Other value types will throw an error.
 There are also two additional functions `id64.isSafeNumber()` and `id64.fromNumber()` which can be used to convert certain Lua numbers. Check the reference section below for more details.
@@ -49,7 +50,7 @@ d("my result: " .. result2)
 The wrapper objects are immutable and only exist once per value, which makes them somewhat memory efficient. You should still try to avoid keeping every single id64 wrapped all the time and instead only wrap them when you actually work with them, so the garbage collector can free up the memory.
 
 
-## Reference:
+## Reference
 
 **id64()**
 ```
